@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
+import { FACTCHECK_POLARITY_LIMITATION } from "../../shared/constants";
 import { factCheckClaims } from "../src/pipeline/factcheck";
 import type { Claim } from "../src/schema";
 
@@ -135,7 +136,7 @@ describe("factCheckClaims", () => {
         source_type: "factchecker",
       },
     ]);
-    assert.deepEqual(result.limitations, []);
+    assert.deepEqual(result.limitations, [FACTCHECK_POLARITY_LIMITATION]);
   });
 
   it("lege Google-respons → no_factcheck_found zonder limitation", async () => {

@@ -38,6 +38,13 @@ export const TRUNCATION_LIMITATION =
   "Analyse gebaseerd op de eerste 3.000 woorden.";
 
 /**
+ * Google matcht de gecheckte bewering, niet per se onze formulering. Een
+ * factcheck over de tegenbewering kan dus bij een claim terechtkomen.
+ */
+export const FACTCHECK_POLARITY_LIMITATION =
+  "Een gevonden factcheck kan over een tegengestelde formulering van de claim gaan; lees de bron zelf.";
+
+/**
  * Default model; overschrijfbaar met env var LLM_MODEL.
  * Let op: de R33-gateway verwacht een provider-prefix (`anthropic/…`).
  */
