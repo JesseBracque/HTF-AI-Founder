@@ -20,12 +20,12 @@ describe("codebook prompt", () => {
   });
 
   it("verbiedt verzinnen of vervolledigen: claims moeten letterlijk uit de tekst komen", () => {
-    assert.match(SYSTEM_PROMPT, /must mean exactly the same as the text/);
+    assert.match(SYSTEM_PROMPT, /must mean exactly the same\s+as the text/);
     assert.match(
       SYSTEM_PROMPT,
       /Do not introduce names, dates, numbers, places or facts that are not in the text/,
     );
-    assert.match(SYSTEM_PROMPT, /never replace it with a name from outside the text/);
+    assert.match(SYSTEM_PROMPT, /never replace it with a name\s+from outside the text/);
     assert.match(SYSTEM_PROMPT, /Keep the attribution the text uses/);
   });
 
