@@ -19,10 +19,20 @@ describe("codebook prompt", () => {
     assert.match(SYSTEM_PROMPT, /Never say whether a claim is true or false/);
   });
 
+  it("verbiedt verzinnen of vervolledigen: claims moeten letterlijk uit de tekst komen", () => {
+    assert.match(SYSTEM_PROMPT, /must mean exactly the same\s+as the text/);
+    assert.match(
+      SYSTEM_PROMPT,
+      /Do not introduce names, dates, numbers, places or facts that are not in the text/,
+    );
+    assert.match(SYSTEM_PROMPT, /never replace it with a name\s+from outside the text/);
+    assert.match(SYSTEM_PROMPT, /Keep the attribution the text uses/);
+  });
+
   it("eist atomaire, korte claims met de volledige naam van het onderwerp", () => {
     assert.match(SYSTEM_PROMPT, /One fact per claim \(atomic\)/);
     assert.match(SYSTEM_PROMPT, /at most 25 words/);
-    assert.match(SYSTEM_PROMPT, /Name the main subject in full/);
+    assert.match(SYSTEM_PROMPT, /only if that name appears in the text/);
   });
 
   it("zet de artikeltekst tussen duidelijke grenzen in de user prompt", () => {

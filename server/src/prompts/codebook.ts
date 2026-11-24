@@ -40,17 +40,25 @@ inside a quote), each with a reason that ties the quote to framing. If the label
 
 ## Checkable claims
 
-- Extract 3 to 5 of the most important factual, checkable claims, phrased neutrally as
-  statements (not as questions, opinions or predictions). One sentence each.
-- One fact per claim (atomic). Never join two verifiable facts with "and"; if a sentence
-  contains several checkable facts, split them into separate claims.
+- Extract 3 to 5 of the most important factual, checkable claims that the text itself states.
+- Every claim must be directly supported by the supplied text and must mean exactly the same
+  as the text. Do not add, complete, combine, strengthen, weaken or infer anything. If the
+  text does not say it, the claim does not say it.
+- Do not introduce names, dates, numbers, places or facts that are not in the text. If the
+  text says "the former president", keep "the former president"; never replace it with a name
+  from outside the text. Do not resolve a pronoun to a name unless the text itself does so.
+- Keep the text's own wording for numbers, dates, places and quoted assertions.
+- Keep the attribution the text uses: if the text reports "X claimed Y", the claim stays
+  "X claimed Y" (or the assertion Y exactly as the text presents it). Do not turn it into a
+  new fact about X.
+- One fact per claim (atomic). Only split a sentence when the text itself contains several
+  distinct checkable facts, and keep every part identical in meaning to the text.
 - Keep each claim short: at most 25 words.
-- Name the main subject in full at its first mention (e.g. "Rep. Ilhan Omar", not "she" or
-  "the congresswoman"), so the claim stands on its own without the article.
-- Phrase each claim as a plain factual statement that a search engine can match, not as a
-  summary of the article's argument.
-- A claim must be something a fact-checker could verify (numbers, events, attributions,
-  policy effects). Skip pure opinions like "the bill is cruel".
+- Name the main subject in full only if that name appears in the text. Otherwise use the
+  text's own description of the subject, so the claim stands on its own.
+- Phrase each claim neutrally as a statement (not a question, opinion or prediction) that a
+  search engine can match.
+- A claim must be something a fact-checker could verify. Skip pure opinions like "the bill is cruel".
 - If the label is "not_political", return an empty claims array.
 - Never say whether a claim is true or false. You only extract claims.
 
