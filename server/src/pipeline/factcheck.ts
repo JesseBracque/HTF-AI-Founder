@@ -1,4 +1,5 @@
 import {
+  FACTCHECK_POLARITY_LIMITATION,
   FACT_CHECK_PAGE_SIZE,
   FACT_CHECK_TIMEOUT_MS,
   GOOGLE_FACTCHECK_URL,
@@ -134,12 +135,19 @@ export async function factCheckClaims(
   const results = await Promise.all(claims.map((claim) => checkOneClaim(claim, apiKey)));
 
   const failedCount = results.filter((result) => result.failed).length;
+  const foundCount = results.filter((result) =>
+    result.claim.factchecks.length > 0,
+  ).length;
+
   const limitations: string[] = [];
   if (failedCount > 0) {
     limitations.push(
       `Factcheck-opzoeking mislukte voor ${failedCount} van ${claims.length} claim(s); ` +
         "deze staan op 'geen factcheck gevonden'.",
     );
+  }
+  if (foundCount > 0) {
+    limitations.push(FACTCHECK_POLARITY_LIMITATION);
   }
 
   return { claims: results.map((result) => result.claim), limitations };

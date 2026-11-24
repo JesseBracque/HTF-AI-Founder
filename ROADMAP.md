@@ -138,6 +138,9 @@ bias-analyse en Google-factchecks + disclaimer.
 - Google Fact Check API: alpha-versie, beperkte dekking, alleen al gecheckte claims.
   "Geen factcheck gevonden" betekent niet "klopt".
 - Ratings van factcheckers zijn niet genormaliseerd: elke factchecker gebruikt een eigen schaal.
+- Een gevonden factcheck kan over een **tegengestelde formulering** van de claim gaan: Google zoekt
+  op de gecheckte bewering, dus een rating als "False" kan bij een ware claim terechtkomen. Daarom
+  staat er in elk resultaat met factchecks een extra limitation; lees altijd de bron.
 - Google Fact Check zoekt op trefwoorden, niet op betekenis: een gevonden factcheck kan over een
   ander maar gelijkaardig onderwerp gaan (bv. claim over "CBO-raming" → factcheck over een ander
   wetsvoorstel), en lange claimzinnen leveren vaak niets op. Claims moeten Engels zijn
