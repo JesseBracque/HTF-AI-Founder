@@ -1,0 +1,21 @@
+{
+  "name": "htf-extension",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Chrome MV3-extensie: analyseert op klik de hoofdtekst van een Engelstalig artikel.",
+  "scripts": {
+    "build": "vite build && npm run build:content",
+    "build:content": "esbuild src/content.ts --bundle --format=iife --target=chrome103 --outfile=dist/content.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.287",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.0",
+    "vite": "^7.0.0"
+  }
+}

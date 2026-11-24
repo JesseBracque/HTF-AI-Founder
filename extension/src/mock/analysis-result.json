@@ -1,0 +1,56 @@
+{
+  "bias": {
+    "label": "center",
+    "confidence": 0.72,
+    "explanation": "De tekst beschrijft de gebeurtenis in tamelijk neutrale taal en laat zowel voor- als tegenstanders aan het woord. Er zijn weinig geladen woorden, maar de selectie van bronnen is beperkt.",
+    "evidence": [
+      {
+        "quote": "Officials from both parties said the proposal still needs work.",
+        "reason": "Beide partijen komen aan bod, zonder waardeoordeel."
+      },
+      {
+        "quote": "The measure passed by a narrow margin.",
+        "reason": "Feitelijke formulering zonder framing."
+      }
+    ],
+    "scale_note": "Left/right according to the US political spectrum."
+  },
+  "claims": [
+    {
+      "text": "The bill passed by a narrow margin.",
+      "status": "factcheck_found",
+      "factchecks": [
+        {
+          "publisher": "Voorbeeld Factchecker",
+          "publisher_site": "example.com",
+          "rating_text": "Mostly True",
+          "title": "Did the bill pass by a single vote?",
+          "url": "https://example.com/factcheck/voorbeeld-1",
+          "review_date": "2024-03-14",
+          "source_type": "factchecker"
+        }
+      ]
+    },
+    {
+      "text": "The measure would cost 2 billion dollars a year.",
+      "status": "no_factcheck_found",
+      "factchecks": []
+    },
+    {
+      "text": "Seven in ten respondents support the proposal.",
+      "status": "no_factcheck_found",
+      "factchecks": []
+    }
+  ],
+  "limitations": [
+    "Voorbeelddata (mock-modus): dit is geen echte analyse.",
+    "Analyse gebaseerd op de eerste 3.000 woorden.",
+    "Factchecks zijn een momentopname en kunnen ontbreken."
+  ],
+  "disclaimer": "Dit is een hulpmiddel en geen oordeel. Lees de bronnen zelf na.",
+  "meta": {
+    "model": "mock",
+    "analyzed_words": 612,
+    "truncated": false
+  }
+}
