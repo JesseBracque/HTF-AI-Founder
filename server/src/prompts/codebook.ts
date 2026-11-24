@@ -42,6 +42,13 @@ inside a quote), each with a reason that ties the quote to framing. If the label
 
 - Extract 3 to 5 of the most important factual, checkable claims, phrased neutrally as
   statements (not as questions, opinions or predictions). One sentence each.
+- One fact per claim (atomic). Never join two verifiable facts with "and"; if a sentence
+  contains several checkable facts, split them into separate claims.
+- Keep each claim short: at most 25 words.
+- Name the main subject in full at its first mention (e.g. "Rep. Ilhan Omar", not "she" or
+  "the congresswoman"), so the claim stands on its own without the article.
+- Phrase each claim as a plain factual statement that a search engine can match, not as a
+  summary of the article's argument.
 - A claim must be something a fact-checker could verify (numbers, events, attributions,
   policy effects). Skip pure opinions like "the bill is cruel".
 - If the label is "not_political", return an empty claims array.

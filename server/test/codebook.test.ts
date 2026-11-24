@@ -19,6 +19,12 @@ describe("codebook prompt", () => {
     assert.match(SYSTEM_PROMPT, /Never say whether a claim is true or false/);
   });
 
+  it("eist atomaire, korte claims met de volledige naam van het onderwerp", () => {
+    assert.match(SYSTEM_PROMPT, /One fact per claim \(atomic\)/);
+    assert.match(SYSTEM_PROMPT, /at most 25 words/);
+    assert.match(SYSTEM_PROMPT, /Name the main subject in full/);
+  });
+
   it("zet de artikeltekst tussen duidelijke grenzen in de user prompt", () => {
     const prompt = buildUserPrompt("Hello article.");
     assert.match(prompt, /<<<ARTICLE\nHello article\.\nARTICLE>>>/);
