@@ -181,6 +181,10 @@ function errorMessage(error: unknown): string {
         return "De server gaf een ongeldig antwoord. Probeer het opnieuw.";
       case "upstream_error":
         return "De analyse is tijdelijk niet beschikbaar (fout bij de AI- of factcheckdienst). Probeer het later opnieuw.";
+      case "bad_request":
+        return "De server kon het verzoek niet lezen. Probeer het opnieuw.";
+      case "rate_limited":
+        return "Te veel analyses kort na elkaar. Probeer het over een minuut opnieuw.";
       case "network_error":
         return "De server is niet bereikbaar. Controleer of de proxy draait.";
     }

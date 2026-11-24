@@ -9,6 +9,24 @@ bij Richard (branch `server-poc`, `POST /analyze` op `http://localhost:8080`).
 
 ## Bouwen en laden
 
+**Via Docker Compose (aanbevolen voor de demo).** Vanaf de repo-root:
+
+```bash
+docker compose up -d --build
+```
+
+De service `extension-build` (zie `extension/Dockerfile`) bouwt de popup en het
+content script in een container en schrijft het resultaat naar `extension/dist` op de
+host. Daarna laad je `extension/dist` in Chrome zoals hieronder. Na een wijziging aan de
+extensie opnieuw `docker compose up -d --build` draaien; de `--build` is nodig omdat de
+container het artifact tijdens de image-build maakt.
+
+De Docker-build gebruikt `VITE_API_BASE_URL=http://localhost:8080` en `VITE_USE_MOCK=0`
+als defaults. Overschrijven kan met dezelfde variabelen in de root-`.env` of in je shell
+vóór `docker compose`.
+
+**Handmatig (handig voor UI-werk zonder Docker):**
+
 ```bash
 cd extension
 npm install
@@ -93,6 +111,8 @@ afbeeldingen.
 | Server: `not_english` | "Alleen Engelstalige pagina's worden ondersteund." |
 | Readability vindt geen tekst / injectie faalt | "Kon de hoofdtekst van deze pagina niet uitlezen …" |
 | Server onbereikbaar / time-out | "De server is niet bereikbaar …" |
+| Te veel verzoeken (`rate_limited`) | "Te veel analyses kort na elkaar …" |
+| Ongeldig verzoek (`bad_request`) | "De server kon het verzoek niet lezen …" |
 | Blocklist-domein | Melding, knop verborgen, niets uitgelezen |
 | `chrome://` e.d. | Melding, knop verborgen (behalve in mock-modus) |
 
@@ -107,7 +127,7 @@ src/popup/render.ts         resultaatweergave (veilig, zonder innerHTML)
 src/popup/styles.css        Achroma-thema (donker, neon, mascotte, tekstballon)
 src/content.ts              Readability-extractie; PING/EXTRACT-listener
 src/api.ts                  POST /analyze + lichte runtime-validatie + mock
-src/types.ts                contracttypes (kopie van server/shared)
+src/types.ts                re-export van de contracttypes uit shared/types.ts
 src/blocklist.ts            gevoelige domeinen
 src/source-ratings.ts       statische AllSides-ratings (J6)
 src/mock/analysis-result.json  voorbeelddata voor VITE_USE_MOCK=1

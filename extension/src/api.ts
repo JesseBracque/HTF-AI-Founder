@@ -45,6 +45,8 @@ const API_ERROR_CODES: readonly ApiErrorCode[] = [
   "too_long",
   "invalid_response",
   "upstream_error",
+  "bad_request",
+  "rate_limited",
 ];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
