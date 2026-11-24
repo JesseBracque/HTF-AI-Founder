@@ -37,8 +37,11 @@ export const SCALE_NOTE = "Left/right according to the US political spectrum.";
 export const TRUNCATION_LIMITATION =
   "Analyse gebaseerd op de eerste 3.000 woorden.";
 
-/** Default model; overschrijfbaar met env var LLM_MODEL. */
-export const DEFAULT_MODEL = "claude-sonnet-5-5";
+/**
+ * Default model; overschrijfbaar met env var LLM_MODEL.
+ * Let op: de R33-gateway verwacht een provider-prefix (`anthropic/…`).
+ */
+export const DEFAULT_MODEL = "anthropic/claude-sonnet-5-5";
 
 /** Google Fact Check Tools API-endpoint. */
 export const GOOGLE_FACTCHECK_URL =
