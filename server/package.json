@@ -1,0 +1,25 @@
+{
+  "name": "htf-server-poc",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "POC-proxy voor de bias & factcheck-extensie",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "smoke": "tsx scripts/smoke.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test \"test/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.13.0",
+    "dotenv": "^18.0.10",
+    "franc": "^6.2.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  }
+}

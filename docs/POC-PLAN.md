@@ -65,27 +65,30 @@ Vaste keuzes:
 
 **Opdracht:** één commando start de proxy; `POST /analyze` geeft schema-geldige JSON.
 
-- [ ] **R1 Contract + fundament (10 min).** Docs-mini bijwerken (Docker+Traefik, Sonnet 5.5,
+- [x] **R1 Contract + fundament (10 min).** Docs-mini bijwerken (Docker+Traefik, Sonnet 5.5,
       `not_political`, AllSides), `shared/types.ts`, `shared/constants.ts`,
       `docs/api-contract.md`, fixture-artikel. Daarna `main` pushen en vertakken.
-- [ ] **R2 Gateway-smoketest (15 min).** `server/scripts/smoke.ts`: `messages.parse` met mini-schema,
+- [x] **R2 Gateway-smoketest (15 min).** `server/scripts/smoke.ts`: `messages.parse` met mini-schema,
       `claude-sonnet-5-5`, `output_config.effort: "low"`, `max_tokens: 300`; check `stop_reason`.
       Fallback als de gateway geen structured outputs doet: JSON-in-prompt + zod-parse.
-- [ ] **R3 Preprocess + schema (20 min).** `server/src/schema.ts` (zod) en `pipeline.ts`:
+      *Uitkomst: gateway vereist provider-prefix `anthropic/claude-sonnet-5-5`; structured outputs werken.*
+- [x] **R3 Preprocess + schema (20 min).** `server/src/schema.ts` (zod) en `pipeline.ts`:
       <150 woorden → `too_short`; afkappen op 3.000 + limitation; >20.000 tekens → 413;
       taal via `franc`; best-effort strip van "By …"-regels en URL's.
-- [ ] **R4 Analyse (25 min).** Eén `messages.parse` met `zodOutputFormat`: bias + 3–5 claims +
+- [x] **R4 Analyse (25 min).** Eén `messages.parse` met `zodOutputFormat`: bias + 3–5 claims +
       citaten. `max_tokens: 1600`, `effort: "low"`, `stop_reason` checken, typed SDK-errors,
       één retry. `not_political` → claims leeg, factcheck overslaan.
-- [ ] **R5 Factchecks (15 min).** Per claim parallel `claims:search?languageCode=en&pageSize=3`,
+- [x] **R5 Factchecks (15 min).** Per claim parallel `claims:search?languageCode=en&pageSize=3`,
       `AbortSignal.timeout(4000)`. Map `textualRating` **letterlijk**, publisher, site, titel, URL,
       reviewDate; dedupe op URL. Fout/leeg → `no_factcheck_found` + limitation.
-- [ ] **R6 API + Docker/Traefik (10 min).** `POST /analyze`, body-limit, zod-validatie,
+- [x] **R6 API + Docker/Traefik (10 min).** `POST /analyze`, body-limit, zod-validatie,
       CORS alleen `chrome-extension://*`, in-memory rate limit 20/min, geen paginatekst loggen.
       Compose met `traefik` (catch-all `PathPrefix(/)` → `api`, poort `${TRAEFIK_PORT:-8080}:80`,
       socket read-only) en `api` zonder host-poort. `.env.example` bijwerken.
-- [ ] **R7 Opleveren (5 min).** `curl` met de fixture werkt; één echte response opslaan als
+      *Let op: Traefik v3.8.0 nodig — v3.3 kan niet met Docker Engine 29 praten (lege daemon-fout).*
+- [x] **R7 Opleveren (5 min).** `curl` met de fixture werkt; één echte response opslaan als
       `docs/fixtures/analysis-result.json` voor Jesse; URL + voorbeeld in de branch-PR zetten.
+      *Getest via `npm start` én via Traefik op `localhost:8080` (health 200, analyse 200, ~8,5 s).*
 
 **Klaar als:** `docker compose up -d --build` + `curl http://localhost:8080/analyze` binnen ~10 s
 geldige JSON geeft; niet-politiek `claims: []` oplevert; een Google-fout de analyse niet blokkeert;
