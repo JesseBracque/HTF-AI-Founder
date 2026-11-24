@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { MAX_CLAIMS, SCALE_NOTE } from "../../shared/constants";
-import { normalizeOutput } from "../src/pipeline/normalize";
+import { cleanSearchQuery, normalizeOutput } from "../src/pipeline/normalize";
 import type { ModelOutput } from "../src/schema";
 
-function output(overrides: Partial<ModelOutput["bias"]> = {}, claims: string[] = []): ModelOutput {
+/** Claims als tekst, of als [tekst, zoekterm]. */
+function output(
+  overrides: Partial<ModelOutput["bias"]> = {},
+  claims: (string | [string, string])[] = [],
+): ModelOutput {
   return {
     bias: {
       label: "center",
@@ -13,7 +17,9 @@ function output(overrides: Partial<ModelOutput["bias"]> = {}, claims: string[] =
       evidence: [{ quote: "Both parties agreed", reason: "Neutrale formulering." }],
       ...overrides,
     },
-    claims,
+    claims: claims.map((c) =>
+      typeof c === "string" ? { text: c, search_query: "query" } : { text: c[0], search_query: c[1] },
+    ),
   };
 }
 
@@ -42,7 +48,15 @@ describe("normalizeOutput", () => {
 
     assert.equal(result.claims.length, MAX_CLAIMS);
     assert.equal(result.claims[0]?.text, "Claim one.");
-    assert.ok(result.claims.every((c) => c.status === "no_factcheck_found" && c.factchecks.length === 0));
+  });
+
+  it("neemt de zoekterm per claim mee", () => {
+    const result = normalizeOutput(
+      output({}, [["The Senate passed the bill 51 to 49.", "Senate bill  vote"]]),
+    );
+    assert.deepEqual(result.claims, [
+      { text: "The Senate passed the bill 51 to 49.", searchQuery: "Senate bill vote" },
+    ]);
   });
 
   it("not_political → geen claims", () => {
@@ -58,5 +72,26 @@ describe("normalizeOutput", () => {
   it("lage zekerheid met korte uitleg → limitation", () => {
     const result = normalizeOutput(output({ confidence: 0.4, explanation: "Gemengd." }, ["A.", "B.", "C."]));
     assert.match(result.limitations.join(" "), /onzeker/);
+  });
+});
+
+describe("cleanSearchQuery", () => {
+  it("haalt aanhalingstekens en zoekoperatoren weg", () => {
+    assert.equal(
+      cleanSearchQuery('"border bill" AND -Senate +vote OR “House”', "x"),
+      "border bill Senate vote House",
+    );
+  });
+
+  it("laat getallen, bedragen en koppeltekens in woorden staan", () => {
+    assert.equal(cleanSearchQuery("$20 billion border-wall 51-49", "x"), "$20 billion border-wall 51-49");
+  });
+
+  it("kapt af op 8 woorden", () => {
+    assert.equal(cleanSearchQuery("a b c d e f g h i j", "x"), "a b c d e f g h");
+  });
+
+  it("valt terug op de claimtekst als de zoekterm leeg is", () => {
+    assert.equal(cleanSearchQuery('  "" ', "The claim."), "The claim.");
   });
 });

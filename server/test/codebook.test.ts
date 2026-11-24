@@ -35,6 +35,16 @@ describe("codebook prompt", () => {
     assert.match(SYSTEM_PROMPT, /only if that name appears in the text/);
   });
 
+  it("geeft voorrang aan betwiste claims boven routinefeiten", () => {
+    assert.match(SYSTEM_PROMPT, /Prioritise claims that fact-checkers are likely to have examined/);
+    assert.match(SYSTEM_PROMPT, /routine,\s+undisputed news details/);
+  });
+
+  it("vraagt per claim een korte Engelse zoekterm zonder woorden van buiten de claim", () => {
+    assert.match(SYSTEM_PROMPT, /"search_query": 3 to 6 English keywords/);
+    assert.match(SYSTEM_PROMPT, /Use only words, names and numbers that appear in the claim itself/);
+  });
+
   it("zet de artikeltekst tussen duidelijke grenzen in de user prompt", () => {
     const prompt = buildUserPrompt("Hello article.");
     assert.match(prompt, /<<<ARTICLE\nHello article\.\nARTICLE>>>/);

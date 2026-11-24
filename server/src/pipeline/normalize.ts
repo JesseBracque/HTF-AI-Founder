@@ -1,6 +1,6 @@
 import { MAX_CLAIMS, SCALE_NOTE } from "../../../shared/constants";
 import type { ModelOutput } from "../schema";
-import type { BiasAnalysis, Claim } from "../schema";
+import type { BiasAnalysis } from "../schema";
 
 function clamp01(value: number): number {
   if (!Number.isFinite(value)) return 0;
@@ -11,10 +11,34 @@ function cleanText(value: string): string {
   return value.replace(/\s+/g, " ").trim();
 }
 
+/** Claim zoals het model hem aanlevert, met interne zoekterm voor Google. */
+export interface ExtractedClaim {
+  text: string;
+  searchQuery: string;
+}
+
 export interface NormalizedOutput {
   bias: BiasAnalysis;
-  claims: Claim[];
+  claims: ExtractedClaim[];
   limitations: string[];
+}
+
+/** Maximaal aantal woorden in een zoekterm; langer matcht Google slecht. */
+const MAX_QUERY_WORDS = 8;
+
+/**
+ * Schoont de zoekterm op: geen aanhalingstekens of zoekoperatoren, hooguit
+ * {@link MAX_QUERY_WORDS} woorden. Leeg → terugvallen op de claimtekst.
+ */
+export function cleanSearchQuery(query: string, claimText: string): string {
+  const cleaned = query
+    .replace(/["“”‘’`]/g, " ")
+    .replace(/(^|\s)[-+](?=\S)/g, "$1")
+    .replace(/\b(?:AND|OR|NOT)\b/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const words = cleaned.split(" ").filter(Boolean).slice(0, MAX_QUERY_WORDS);
+  return words.length > 0 ? words.join(" ") : claimText;
 }
 
 /**
@@ -50,32 +74,35 @@ export function normalizeOutput(output: ModelOutput): NormalizedOutput {
     );
   }
 
-  let claimTexts = output.claims
-    .map(cleanText)
-    .filter((text) => text.length > 0);
+  let claims: ExtractedClaim[] = output.claims
+    .map((claim) => {
+      const text = cleanText(claim.text);
+      return { text, searchQuery: cleanSearchQuery(claim.search_query, text) };
+    })
+    .filter((claim) => claim.text.length > 0);
 
   // Dedupe (hoofdletterongevoelig), behoud volgorde.
   const seen = new Set<string>();
-  claimTexts = claimTexts.filter((text) => {
-    const key = text.toLowerCase();
+  claims = claims.filter((claim) => {
+    const key = claim.text.toLowerCase();
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
 
-  if (claimTexts.length > MAX_CLAIMS) {
-    claimTexts = claimTexts.slice(0, MAX_CLAIMS);
+  if (claims.length > MAX_CLAIMS) {
+    claims = claims.slice(0, MAX_CLAIMS);
   }
 
   if (label === "not_political") {
-    claimTexts = [];
-  } else if (claimTexts.length === 0) {
+    claims = [];
+  } else if (claims.length === 0) {
     limitations.push(
       "Geen controleerbare claims gevonden; de factcheck-stap is overgeslagen.",
     );
-  } else if (claimTexts.length < 3) {
+  } else if (claims.length < 3) {
     limitations.push(
-      `Model vond minder dan 3 controleerbare claims (${claimTexts.length}).`,
+      `Model vond minder dan 3 controleerbare claims (${claims.length}).`,
     );
   }
 
@@ -86,12 +113,6 @@ export function normalizeOutput(output: ModelOutput): NormalizedOutput {
     evidence,
     scale_note: SCALE_NOTE,
   };
-
-  const claims: Claim[] = claimTexts.map((text) => ({
-    text,
-    status: "no_factcheck_found",
-    factchecks: [],
-  }));
 
   return { bias, claims, limitations };
 }
