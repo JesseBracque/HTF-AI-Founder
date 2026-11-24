@@ -5,7 +5,7 @@
  * - beoordeel inhoud/framing, niet de uitgever (we sturen geen uitgever/URL/auteur mee);
  * - Amerikaanse links/rechts-schaal, altijd benoemd;
  * - het model beslist nooit of iets "waar" is, het extraheert alleen claims;
- * - neutrale, Nederlandse uitleg voor de UI.
+ * - neutrale, Nederlandse uitleg voor de UI; claims blijven Engels (zoekterm voor Google Fact Check).
  */
 
 export const SYSTEM_PROMPT = `You are a careful text-analysis assistant for a browser extension.
@@ -51,6 +51,8 @@ inside a quote), each with a reason that ties the quote to framing. If the label
 
 The label, confidence and quotes are as defined above. Write "explanation" and every
 "reason" in Dutch (the extension UI is Dutch). Quotes stay verbatim English.
+Write every claim "text" in ENGLISH, never in Dutch: claims are used as search queries
+against an English-language fact-check database.
 
 Return only the structured output in the required schema.`;
 

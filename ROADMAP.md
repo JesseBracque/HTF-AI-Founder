@@ -138,6 +138,11 @@ bias-analyse en Google-factchecks + disclaimer.
 - Google Fact Check API: alpha-versie, beperkte dekking, alleen al gecheckte claims.
   "Geen factcheck gevonden" betekent niet "klopt".
 - Ratings van factcheckers zijn niet genormaliseerd: elke factchecker gebruikt een eigen schaal.
+- Google Fact Check zoekt op trefwoorden, niet op betekenis: een gevonden factcheck kan over een
+  ander maar gelijkaardig onderwerp gaan (bv. claim over "CBO-raming" → factcheck over een ander
+  wetsvoorstel), en lange claimzinnen leveren vaak niets op. Claims moeten Engels zijn
+  (`languageCode=en`); de prompt dwingt dat af.
+- Google Fact Check-key is niet beperkt tot een IP-adres (server-IP nog onbekend); alleen tot de API.
 - Analyse beperkt tot de eerste 3.000 woorden; teksten onder 150 woorden worden niet geanalyseerd.
 - Tekstextractie kan falen op betaalmuren en dynamische pagina's.
 - Paginatekst gaat naar externe diensten (AI-provider, Google).
