@@ -54,9 +54,25 @@ uit `docs/fixtures/analysis-result.json` (van de server-branch).
   "Links/rechts volgens de Amerikaanse politieke schaal", claims met de **letterlijke**
   rating van de factchecker (of "Geen factcheck gevonden (dit betekent niet dat de claim
   klopt)"), beperkingen en de disclaimer.
+- Een statische mascotte (factcheck-ridder) met tekstballon vat de status samen: idle,
+  laden, klaar (bias + aantal claims met factcheck), fout of blocklist.
 - Bij `not_political`: melding + scale note + disclaimer, **geen** claims-sectie.
 - Toont de AllSides-bronrating als **apart** blok (J6, stretch). Dat is een statisch,
   lokaal signaal en gaat niet naar de server; de analyse gebruikt het niet.
+
+## Vormgeving
+
+De popup gebruikt een donker fantasy-thema geïnspireerd op de site van Hack The Future 2026
+("The Curse of Achroma"): donkerpaars, elektrisch blauw, neon magenta en oranje, een
+pixelart-factcheck-ridder (helm, pluim, schild met vinkje, zwaard) en een tekstballon met
+de samenvatting. Er is **geen** affiliatie met Hack The Future; alleen de visuele sfeer is
+als inspiratie gebruikt.
+
+Het display-lettertype is **Pirata One** (SIL Open Font License 1.1, Rodrigo Fuenzalida),
+lokaal gebundeld in `public/fonts/`. Daardoor doet de popup geen externe fontrequests.
+De licentietekst staat in `public/fonts/OFL.txt`. De mascotte is een inline pixel-SVG
+(32×32-raster met `shape-rendering="crispEdges"`) in `popup.html`; er zijn geen externe
+afbeeldingen.
 
 ## Privacy en veiligheid
 
@@ -84,10 +100,11 @@ uit `docs/fixtures/analysis-result.json` (van de server-branch).
 
 ```
 public/manifest.json        MV3-manifest (popup.html, permissies, host_permissions)
-popup.html                  popup-structuur
-src/popup/main.ts           flow: privacy, blocklist, extractie, fetch, fouten
+public/fonts/               Pirata One (woff2) + OFL-licentie
+popup.html                  popup-structuur + inline SVG-mascotte
+src/popup/main.ts           flow: privacy, blocklist, extractie, fetch, fouten, tekstballon
 src/popup/render.ts         resultaatweergave (veilig, zonder innerHTML)
-src/popup/styles.css        styling (licht/donker)
+src/popup/styles.css        Achroma-thema (donker, neon, mascotte, tekstballon)
 src/content.ts              Readability-extractie; PING/EXTRACT-listener
 src/api.ts                  POST /analyze + lichte runtime-validatie + mock
 src/types.ts                contracttypes (kopie van server/shared)

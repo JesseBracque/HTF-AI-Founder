@@ -74,6 +74,43 @@ function clampConfidence(value: number): number {
   return Math.min(1, Math.max(0, value));
 }
 
+/**
+ * Korte samenvatting in de tekstballon van de mascotte: bias-label met
+ * zekerheid en hoeveel claims een factcheck hebben.
+ */
+export function renderBubbleChips(
+  container: HTMLElement,
+  result: AnalysisResult,
+): void {
+  container.replaceChildren();
+
+  const label = result.bias.label;
+  const certainty = Math.round(clampConfidence(result.bias.confidence) * 100);
+  const chips: HTMLElement[] = [
+    el("span", `chip chip--${label}`, `${LABELS[label]} · ${certainty}%`),
+  ];
+
+  if (label === "not_political") {
+    chips.push(el("span", "chip", "Geen claims of factchecks"));
+  } else {
+    const total = result.claims.length;
+    if (total === 0) {
+      chips.push(el("span", "chip", "Geen claims gevonden"));
+    } else {
+      const withFactcheck = result.claims.filter(
+        (claim) =>
+          claim.status === "factcheck_found" && claim.factchecks.length > 0,
+      ).length;
+      chips.push(
+        el("span", "chip", `${withFactcheck} van ${total} claims met factcheck`),
+      );
+    }
+  }
+
+  container.append(...chips);
+  container.hidden = false;
+}
+
 export function clearResults(container: HTMLElement): void {
   container.replaceChildren();
   container.hidden = true;
