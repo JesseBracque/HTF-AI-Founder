@@ -2,8 +2,13 @@ import "./styles.css";
 import { AnalyzeApiError, USE_MOCK, analyzeText } from "../api";
 import { isBlockedHost, parseHostname } from "../blocklist";
 import { getSourceRating } from "../source-ratings";
-import type { ExtractResponse } from "../types";
-import { clearResults, renderResult, showError } from "./render";
+import type { AnalysisResult, ExtractResponse } from "../types";
+import {
+  clearResults,
+  renderBubbleChips,
+  renderResult,
+  showError,
+} from "./render";
 
 const MIN_WORDS = 150;
 const PRIVACY_STORAGE_KEY = "privacyAccepted:v1";
@@ -26,16 +31,32 @@ const els = {
   mockNotice: getEl<HTMLElement>("mock-notice"),
   siteLine: getEl<HTMLElement>("site-line"),
   analyze: getEl<HTMLButtonElement>("analyze"),
-  status: getEl<HTMLElement>("status"),
   blocked: getEl<HTMLElement>("blocked"),
   results: getEl<HTMLElement>("results"),
+  bubble: getEl<HTMLElement>("bubble"),
+  bubbleText: getEl<HTMLElement>("bubble-text"),
+  bubbleChips: getEl<HTMLElement>("bubble-chips"),
 };
 
 let currentHost: string | undefined;
 
-function setStatus(text: string): void {
-  els.status.textContent = text;
-  els.status.hidden = text.length === 0;
+type BubbleMode = "idle" | "loading" | "result" | "error";
+
+/** Laat de mascotte "praten": status, samenvatting of fout. */
+function setBubble(text: string, mode: BubbleMode = "idle"): void {
+  els.bubbleText.textContent = text;
+  els.bubble.classList.toggle("loading", mode === "loading");
+  els.bubble.classList.toggle("error", mode === "error");
+
+  if (mode !== "result") {
+    els.bubbleChips.replaceChildren();
+    els.bubbleChips.hidden = true;
+  }
+}
+
+function showResultBubble(result: AnalysisResult): void {
+  setBubble("Klaar! Dit vond ik.", "result");
+  renderBubbleChips(els.bubbleChips, result);
 }
 
 function setBusy(busy: boolean): void {
@@ -72,12 +93,14 @@ async function refreshTab(): Promise<boolean> {
     els.blocked.textContent =
       "Deze site staat op de blocklist (mail, bank of betaalprovider). De extensie leest hier niets uit en stuurt niets door.";
     clearResults(els.results);
-    setStatus("");
+    setBubble("Deze pagina sla ik over — daar lees ik niets uit.");
   } else if (!analyzable) {
     els.blocked.textContent =
       "Op deze pagina kan de extensie niet analyseren (alleen gewone http- en https-pagina's).";
     clearResults(els.results);
-    setStatus("");
+    setBubble("Op deze pagina kan ik niets doen. Open een gewoon artikel.");
+  } else {
+    setBubble("Klaar om deze pagina te doorzoeken?");
   }
 
   return !blocked && analyzable;
@@ -168,7 +191,6 @@ function errorMessage(error: unknown): string {
 
 async function runAnalysis(): Promise<void> {
   setBusy(true);
-  setStatus("Bezig met analyseren…");
   clearResults(els.results);
 
   try {
@@ -178,11 +200,13 @@ async function runAnalysis(): Promise<void> {
       return;
     }
 
+    setBubble("Ik speur de tekst af", "loading");
+
     if (USE_MOCK) {
       // UI testen zonder server of API-key (J5).
       const result = await analyzeText("");
       renderResult(els.results, result, getSourceRating(currentHost));
-      setStatus("");
+      showResultBubble(result);
       return;
     }
 
@@ -201,17 +225,16 @@ async function runAnalysis(): Promise<void> {
         els.results,
         `Te kort om te analyseren: deze pagina heeft ${words} woorden, minimaal ${MIN_WORDS} nodig.`,
       );
-      setStatus("");
+      setBubble("Dit is te weinig tekst om iets over te zeggen.", "error");
       return;
     }
 
-    setStatus("Bezig met analyseren… dit kan enkele seconden duren.");
     const result = await analyzeText(text);
     renderResult(els.results, result, getSourceRating(currentHost));
-    setStatus("");
+    showResultBubble(result);
   } catch (error) {
     showError(els.results, errorMessage(error));
-    setStatus("");
+    setBubble("Oeps, dat lukte niet.", "error");
   } finally {
     setBusy(false);
   }
@@ -228,6 +251,7 @@ async function init(): Promise<void> {
 
   els.privacyPanel.hidden = false;
   els.mainPanel.hidden = true;
+  setBubble("Voordat ik mag rondkijken, moet je dit even weten.");
 }
 
 els.acceptPrivacy.addEventListener("click", () => {
