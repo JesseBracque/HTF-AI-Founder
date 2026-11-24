@@ -81,14 +81,14 @@ Vaste keuzes:
 - [x] **R5 Factchecks (15 min).** Per claim parallel `claims:search?languageCode=en&pageSize=3`,
       `AbortSignal.timeout(4000)`. Map `textualRating` **letterlijk**, publisher, site, titel, URL,
       reviewDate; dedupe op URL. Fout/leeg → `no_factcheck_found` + limitation.
-- [~] **R6 API + Docker/Traefik (10 min).** `POST /analyze`, body-limit, zod-validatie,
+- [x] **R6 API + Docker/Traefik (10 min).** `POST /analyze`, body-limit, zod-validatie,
       CORS alleen `chrome-extension://*`, in-memory rate limit 20/min, geen paginatekst loggen.
       Compose met `traefik` (catch-all `PathPrefix(/)` → `api`, poort `${TRAEFIK_PORT:-8080}:80`,
       socket read-only) en `api` zonder host-poort. `.env.example` bijwerken.
-      *Code + compose-validatie klaar; `docker compose up` nog draaien (Docker Desktop stond uit).*
-- [~] **R7 Opleveren (5 min).** `curl` met de fixture werkt; één echte response opslaan als
+      *Let op: Traefik v3.8.0 nodig — v3.3 kan niet met Docker Engine 29 praten (lege daemon-fout).*
+- [x] **R7 Opleveren (5 min).** `curl` met de fixture werkt; één echte response opslaan als
       `docs/fixtures/analysis-result.json` voor Jesse; URL + voorbeeld in de branch-PR zetten.
-      *Lokaal via `npm start` getest en fixture opgeslagen; Docker/Traefik-pad nog testen.*
+      *Getest via `npm start` én via Traefik op `localhost:8080` (health 200, analyse 200, ~8,5 s).*
 
 **Klaar als:** `docker compose up -d --build` + `curl http://localhost:8080/analyze` binnen ~10 s
 geldige JSON geeft; niet-politiek `claims: []` oplevert; een Google-fout de analyse niet blokkeert;

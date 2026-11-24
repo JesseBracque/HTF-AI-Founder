@@ -100,3 +100,19 @@ Vorm:
 - `docs/fixtures/article-en.txt` — politiek Engels testartikel (input voor R2/R7)
 - `docs/fixtures/request.json` — kant-en-klare request-body (`{ "text": "..." }`)
 - `docs/fixtures/analysis-result.json` — echte response, door Richard opgeslagen voor Jesse (mock)
+
+## Testen vanaf de command line
+
+```bash
+# Bash / zsh
+curl -s http://localhost:8080/health
+curl -s -X POST http://localhost:8080/analyze -H 'content-type: application/json' --data-binary @docs/fixtures/request.json
+```
+
+```powershell
+# PowerShell: curl.exe (niet `curl`) en alles op één regel
+curl.exe -s http://localhost:8080/health
+curl.exe -s -X POST http://localhost:8080/analyze -H "content-type: application/json" --data-binary "@docs/fixtures/request.json"
+# of native:
+Invoke-RestMethod -Uri http://localhost:8080/analyze -Method Post -ContentType 'application/json' -InFile docs/fixtures/request.json
+```

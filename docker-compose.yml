@@ -1,6 +1,7 @@
 services:
   traefik:
-    image: traefik:v3.3
+    # v3.8+: nieuwe Docker-API-client; oudere tags (v3.3) falen op Docker Engine 29+
+    image: traefik:v3.8.0
     command:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
