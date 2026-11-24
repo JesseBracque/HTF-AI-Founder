@@ -1,0 +1,25 @@
+# Secrets — nooit committen
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+.dev.vars
+
+# Dependencies & build
+node_modules/
+dist/
+build/
+.wrangler/
+
+# Datasets (alleen download-instructies committen)
+eval/data/
+
+# Lokale tool-instellingen
+.claude/settings.local.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
