@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bias &amp; Factcheck</title>
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <h1>Bias &amp; Factcheck</h1>
+        <p class="subtitle">Hulpmiddel, geen oordeel</p>
+      </header>
+
+      <section id="privacy-panel" class="panel card" hidden>
+        <h2>Voordat je begint</h2>
+        <p>
+          De tekst van de pagina wordt naar externe AI- en factcheckdiensten
+          gestuurd om de analyse te maken. De tekst wordt niet door deze
+          extensie bewaard.
+        </p>
+        <p class="muted">
+          De extensie leest alleen de hoofdtekst, en alleen nadat je zelf op
+          &ldquo;Analyseer deze pagina&rdquo; klikt. Op mail-, bank- en
+          betaalsites doet de extensie niets. Er wordt geen titel, auteur, URL
+          of domein naar de server gestuurd.
+        </p>
+        <button id="accept-privacy" class="button primary" type="button">
+          Ik begrijp het
+        </button>
+      </section>
+
+      <section id="main-panel" class="panel" hidden>
+        <p id="mock-notice" class="mock-notice" hidden>
+          Mock-modus: het resultaat is voorbeelddata, geen echte analyse.
+        </p>
+
+        <p id="site-line" class="site-line"></p>
+
+        <button id="analyze" class="button primary" type="button">
+          Analyseer deze pagina
+        </button>
+
+        <p id="status" class="status" role="status" aria-live="polite" hidden></p>
+        <p id="blocked" class="blocked-notice" hidden></p>
+
+        <div id="results" class="results" hidden></div>
+      </section>
+
+      <footer class="footer">
+        <p>Alleen Engelstalige pagina's. Links/rechts volgens de Amerikaanse politieke schaal.</p>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/popup/main.ts"></script>
+  </body>
+</html>
