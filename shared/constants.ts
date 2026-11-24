@@ -23,8 +23,24 @@ export const SUPPORTED_LANGUAGE = "en";
 /** Timeout per Google Fact Check-call. */
 export const FACT_CHECK_TIMEOUT_MS = 4_000;
 
-/** Aantal factchecks per claim dat we opvragen. */
-export const FACT_CHECK_PAGE_SIZE = 3;
+/**
+ * Aantal resultaten per Google-zoekvraag. Ruim, omdat korte zoektermen ook
+ * niet-relevante treffers geven die de relevantiecontrole daarna wegfiltert.
+ */
+export const FACT_CHECK_PAGE_SIZE = 10;
+
+/** Maximaal aantal gecheckte beweringen per claim dat naar de relevantiecontrole gaat. */
+export const MAX_FACTCHECK_CANDIDATES = 6;
+
+/** Maximaal aantal factchecks per claim in de output. */
+export const MAX_FACTCHECKS_PER_CLAIM = 5;
+
+/** Timeout voor de relevantiecontrole (tweede modelaanroep). */
+export const RELEVANCE_TIMEOUT_MS = 15_000;
+
+/** Limitation als de relevantiecontrole faalt en we ongefilterd tonen. */
+export const RELEVANCE_FAILED_LIMITATION =
+  "Relevantiecontrole van de factchecks mislukte; gevonden factchecks kunnen over een ander onderwerp gaan.";
 
 /** Vaste disclaimer, letterlijk in elk resultaat. */
 export const DISCLAIMER =

@@ -5,15 +5,15 @@ import { PipelineError } from "../errors";
 import { SYSTEM_PROMPT, buildUserPrompt } from "../prompts/codebook";
 import { ModelOutputSchema, type ModelOutput } from "../schema";
 
-/** POC-budget per analyse (zie docs/POC-PLAN.md). */
-const MAX_TOKENS = 1600;
+/** POC-budget per analyse (zie docs/POC-PLAN.md); ruimte voor een zoekterm per claim. */
+const MAX_TOKENS = 2000;
 const EFFORT = "low" as const;
 
 export function configuredModel(): string {
   return process.env.LLM_MODEL || DEFAULT_MODEL;
 }
 
-function getClient(): Anthropic {
+export function getClient(): Anthropic {
   const apiKey = process.env.R33_API_KEY || process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new PipelineError(
@@ -30,7 +30,7 @@ function getClient(): Anthropic {
 }
 
 /** Vertaalt SDK-fouten naar contractcodes; nooit op foutstrings matchen. */
-function mapSdkError(error: unknown): PipelineError {
+export function mapSdkError(error: unknown): PipelineError {
   if (error instanceof PipelineError) return error;
 
   if (error instanceof Anthropic.AuthenticationError) {

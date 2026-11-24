@@ -124,6 +124,8 @@ bias-analyse en Google-factchecks + disclaimer.
 | 5 | Server-hosting: Cloudflare Worker of lokaal Node? Voorstel: lokaal Node voor de demo, Worker als het snel lukt | team | fase 2 |
 | 6 | Hoe ziet BiasLab zijn klassenverdeling eruit, en welke licentie heeft het? | bij download | fase 1 (P1) |
 | 7 | Welke gratis modellen biedt jullie OpenCode-installatie? (`opencode models`) | 2 min | fase 1 (P1) |
+| 8 | Factcheck over de tegenbewering: tonen we de gecheckte bewering van de factchecker (Google `claim.text`) in de UI, zodat "False" niet bij een ware claim lijkt te horen? Vraagt een contractwijziging (`checked_claim`) + UI | team | — |
+| 9 | Meer factcheck-bronnen als vangnet: Claude web search beperkt tot factcheck-domeinen, of de Fact-Check Insights-dataset (Duke) voor de evaluatie | team | — |
 
 ## Beperkingen (voor de presentatie, aanvullen tijdens het bouwen)
 
@@ -141,10 +143,17 @@ bias-analyse en Google-factchecks + disclaimer.
 - Een gevonden factcheck kan over een **tegengestelde formulering** van de claim gaan: Google zoekt
   op de gecheckte bewering, dus een rating als "False" kan bij een ware claim terechtkomen. Daarom
   staat er in elk resultaat met factchecks een extra limitation; lees altijd de bron.
-- Google Fact Check zoekt op trefwoorden, niet op betekenis: een gevonden factcheck kan over een
-  ander maar gelijkaardig onderwerp gaan (bv. claim over "CBO-raming" → factcheck over een ander
-  wetsvoorstel), en lange claimzinnen leveren vaak niets op. Claims moeten Engels zijn
-  (`languageCode=en`); de prompt dwingt dat af.
+- Google Fact Check zoekt op trefwoorden, niet op betekenis: lange claimzinnen leveren vaak niets
+  op (test: 0 treffers voor een volledige zin, 10 voor "2020 election widespread fraud"). We zoeken
+  daarom ook met een korte zoekterm van het model. Die geeft meer treffers over een ander maar
+  gelijkaardig onderwerp (bv. een ander wetsvoorstel); een tweede modelaanroep filtert die weg.
+  Die filter kan zich vergissen (te streng of te los), en kost extra tijd en tokens per analyse.
+  Mislukt de filter, dan tonen we ongefilterd met een limitation. Claims en zoektermen moeten
+  Engels zijn (`languageCode=en`); de prompt dwingt dat af.
+- Factcheckers controleren vooral betwiste of virale beweringen, geen routinefeiten (datum van
+  een inval, wat in beslag is genomen). Bij heel recent nieuws bestaan er vaak nog geen
+  factchecks. De claimkeuze geeft daarom voorrang aan betwiste/toegeschreven beweringen; toch
+  blijft "0 van 5 gevonden" bij zulke artikelen normaal (test Fox News-artikel 24-11-2026: 1 van 5).
 - Google Fact Check-key is niet beperkt tot een IP-adres (server-IP nog onbekend); alleen tot de API.
 - Analyse beperkt tot de eerste 3.000 woorden; teksten onder 150 woorden worden niet geanalyseerd.
 - Tekstextractie kan falen op betaalmuren en dynamische pagina's.

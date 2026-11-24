@@ -41,6 +41,11 @@ inside a quote), each with a reason that ties the quote to framing. If the label
 ## Checkable claims
 
 - Extract 3 to 5 of the most important factual, checkable claims that the text itself states.
+- Prioritise claims that fact-checkers are likely to have examined: contested or disputed
+  assertions, allegations, accusations, rumours or speculation the text reports, statements
+  attributed to politicians or officials, and widely shared figures. Pick routine,
+  undisputed news details (dates of events, who attended, what was seized or filed) only
+  when the text contains too few contested claims.
 - Every claim must be directly supported by the supplied text and must mean exactly the same
   as the text. Do not add, complete, combine, strengthen, weaken or infer anything. If the
   text does not say it, the claim does not say it.
@@ -61,6 +66,18 @@ inside a quote), each with a reason that ties the quote to framing. If the label
 - A claim must be something a fact-checker could verify. Skip pure opinions like "the bill is cruel".
 - If the label is "not_political", return an empty claims array.
 - Never say whether a claim is true or false. You only extract claims.
+
+## Search query per claim
+
+For every claim also return "search_query": 3 to 6 English keywords that a keyword-based
+fact-check search engine can match.
+- Use only words, names and numbers that appear in the claim itself. Never add names or
+  facts from outside the text.
+- Keep the most distinctive terms: names of people, organisations, bills, places, events and
+  key numbers. Drop filler words, verbs like "said", dates of the week and attributions.
+- No quotes, no operators, no punctuation except what is part of a name or number.
+- Example: claim "Dozens of court challenges to the 2020 presidential election results
+  failed." → search_query "2020 presidential election court challenges".
 
 ## Language
 

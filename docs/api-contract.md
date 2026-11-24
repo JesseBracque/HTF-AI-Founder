@@ -57,6 +57,12 @@ Vaste regels:
 - `rating_text` is de letterlijke `textualRating` van de factchecker; niet genormaliseerd.
 - `claims[].status` is `no_factcheck_found` als Google niets vond **of** de call faalde
   (dan staat er een limitation bij).
+- Hoe factchecks gevonden worden (server-intern, verandert het contract niet): per claim
+  zoekt de server bij Google met de volledige claimzin én met een korte zoekterm van 3–6
+  trefwoorden die het model meelevert. Een tweede, kleine modelaanroep controleert per
+  gevonden factcheck of die over **dezelfde specifieke bewering** gaat (zonder de rating te
+  zien); alleen die blijven over, maximaal 5 per claim. Mislukt die controle, dan tonen we
+  ongefilterd met een limitation.
 - Geen paginatekst in logs of opslag.
 
 ## Grenzen

@@ -31,10 +31,31 @@ export const ModelOutputSchema = z.object({
     explanation: z.string(),
     evidence: z.array(biasEvidenceSchema),
   }),
-  claims: z.array(z.string()),
+  claims: z.array(
+    z.object({
+      text: z.string(),
+      /** 3–6 trefwoorden voor Google Fact Check; intern, niet in het contract. */
+      search_query: z.string(),
+    }),
+  ),
 });
 
 export type ModelOutput = z.infer<typeof ModelOutputSchema>;
+
+/**
+ * Relevantiecontrole (tweede, kleine modelaanroep): per kandidaat-factcheck
+ * of die over dezelfde specifieke bewering gaat. Bevat bewust geen rating.
+ */
+export const RelevanceOutputSchema = z.object({
+  verdicts: z.array(
+    z.object({
+      id: z.string(),
+      addresses_claim: z.boolean(),
+    }),
+  ),
+});
+
+export type RelevanceOutput = z.infer<typeof RelevanceOutputSchema>;
 
 export const factCheckSchema = z.object({
   publisher: z.string().min(1),
